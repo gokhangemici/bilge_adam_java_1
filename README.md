@@ -1,25 +1,15 @@
-# Java 17 ile gelen yeni özellikler
-### Mühürlü sınıflar:
-- JEP 409: Mühürlü sınıflar bu sürümde java diline eklendi. Başka sınıfları veya arayüzleri kısıtlayan mühürlü sınıflar ve arayüzler onları uygulayabilir ve onlardan kalıtım alabilir.
-### Switch için desen eşleşmesi:
-* JEP 406: Switch yapısı için genişletilmiş desen eşleşmesi bir ifadenin her biri belirli bir eyleme sahip bir dizi desene karşı test edilmesini sağlar. Böylece karmaşık veri odaklı sorgulamalar güvenli bir şekide ifade edilebilir.
-### Büyük ikonlara erişmek için yeni bir API desteği:
-* JDK 17 ile mümkün olduğunda daha yüksek kaliteli simgelere erişime izin veren yeni bir method tanımlandı. 
-* Bu method tamamen windows platformu için eklendi. Ancak diğer platformlardaki sonuçlar değişebilir ve daha sonra geliştirilecektir.
+# StringBuffer ve StringBuilder sınıfları hakkında kısa özet
+* <p>String objeleri <strong>immutable</strong> yani değiştirilemez özelliğe sahiptir. String objeleri ile cok fazla degisiklik yapmamiz(manipulation) sonucunda yeni objeler olusacaktir ve bu olusan objelerin buyuk bir kismi String Poolda terkedilmis objeler olarak kalacaktir.(yani referans gosteren bir degiskeni olmayacaktir).</p>
+* String objeleri uzerinden cok fazla degisiklik yapilacagi zaman String sinifini kullanmak yerine StringBuffer veya StringBuilder siniflarini kullanmak verimlilik saglayacaktir. StringBuffer ve StringBuilder objeleri immutable degildir dolayisiyla bu objeler uzerinde degisiklik yapilabilir.
+## StringBuffer vs StringBuilder
+* StringBuffer ve StringBuilder ayni metotlara sahiptir . Bu siniflar arasindaki fark sudur ; StringBuilder <strong>thread-safe</strong> degildir yani StringBuilder sinifinin metotlari <strong>syncronized</strong>  degildir. Dolayisiyla StringBuilder , StringBuffer sinifa gore daha hizli calisacaktir.
+![alt](https://miro.medium.com/max/700/1*r4DzMLpnlYxVZDpXHa_pAA.png)
+## StringBuilder Nedir?
+- StringBuilder sınıfı en kısa tanımla bize <strong>“mutable”</strong> yani değiştirilebilir string elde etmemize olanak tanır. Böylece hafızada her seferinde yeni bir alan açılmadan var olan alan üzerinde değişiklik yapılabilir. Bu da StringBuilder sınıfını hafıza kullanımı olarak String sınıfının önüne geçirir.
+- StringBuilder thread-safe değildir. Yani <strong>synchronized</strong> değildir. Thread’li bir işlem kullanılacaksa StringBuilder kullanılması güvenli değildir. Basit bir şekilde durumu açıklayacak olursak: Aynı anda birden fazla thread, oluşturduğunuz StringBuilder nesnesini değiştirmeye çalıştığında StringBuilder bunu engelleyemez. Bu durumda da threadler arasında yapılan değişiklikler aslında bizim istemediğimiz değer değişikliğine neden olur.
+ + Bir mail göndermek için StringBuilder ile metin oluşturduğunuzu düşünün. Bu işlemi de aynı zamanda 2 farklı thread çalıştırıyor olsun. İlk thread işlemine başlayıp StringBuilder nesnenizi değiştiriyor ve mail içeriğini ayarlıyor. Aynı zamanda diğer thread de aynı StringBuilder nesnesi üzerinde değişiklik yapmak istiyor. Farklı bir kişiye gönderilecek mail için içerik hazırlıyor. Ancak bunu yaparken ilk thread’imizin atadığı değeri ezmiş oluyor. Bunun önüne geçmek için StringBuffer kullanılmalıdır.
+## StringBuffer nedir ?
+* <p>StringBuffer ile StringBuilder aynı metodlara sahiptir. Aynı mantıkla ilerler. Aralarındaki tek fark ise StringBuffer <strong>thread-safe yani synchronized ‘tır</strong>. Bu durum da StringBuffer’ı thread’li işlemlerde kullanılmasını güvenli yapar. Thread’li işlemlerde güvenli olmasının getirdiği bir dezavantaj da mevcuttur. Bu durum StringBuffer’ın StringBuilder’dan daha yavaş çalışmasına neden olur.</p>
+ ### Özet
+* String nesneleri değiştirilemez. Bundan dolayı sürekli üzerinde değişiklik/ekleme yapılacak stringlerimiz varsa hafıza konusunda sıkıntı çıkartması mümkün. Bunun önüne geçmek için StringBuilder ve StringBuffer sınıfları mevcut. Bu iki sınıf değiştirilebilir stringler kullanmamızı sağlıyor. StringBuffer’ın StringBuilder’dan farkı ise çok thread’li ortamlarda çalışırken nesnelerin değişmeyeceği garantisini vermesi. Bu durum da StringBuffer’ın, StringBuilder’dan daha yavaş olmasına neden olmakta.
 
- ```java
- FileSystemView fsv = FileSystemView.getFileSystemView();
- Icon icon = fsv.getSystemIcon(new File("application.exe"), 64, 64);
- JLabel label = new JLabel(icon);
-```
-* Kullanıcı bu kod ile <strong>application.exe<strong> çalıştırılabilir dosyası için yüksek kaliteli bir ikon elde edebilir. Bu ikon highDPI ortamında daha iyi ölçeklenebilecek bir etiket oluşturmak için uygundur.
-### Sözde rastgele sayı üreteçleri geliştirildi
-* Sözde rastgele sayı üreteçleri için yeni arayüz tipleri ve uygulamaları bu versiyonla birlikte geliyor.
-### Hata Mesajlarında Kaynak Detayları
-- JavaDoc girdi kaynak dosyasında bir sorunu raporladığında, o sorun için kaynak satırı ve derleyici tanılama mesajlarına benzer şekilde o satırdaki konuma işaret eden bir şapka(^) işaretini gösterir.
-
-- Ek olarak, loglama ve diğer bilgi mesajları standard hata sınıfında yazılmış durumda. 
-
-### Yabancı fonksiyon ve Bellek API
-* Bu yeni sürümde Java programlarının java çalışma zamanı dışındaki kod ve verilerle birlikte çalışabileceği bir AP tanıtıldı.
-- Etkili bir şekilde yabancı fonksiyonları çağırarak ve yabancı belleğe güvenli bir şekilde erişmesini sağlayarak, Bu API JNI ın kırılganlığı ve tehlikesi olmadan java programlarının yerel kütüphaneleri çağırabilmesine ve yerel verileri işleyebilmesine olanak tanır
