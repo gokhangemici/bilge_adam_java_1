@@ -3,7 +3,6 @@
 * String objeleri uzerinden cok fazla degisiklik yapilacagi zaman String sinifini kullanmak yerine StringBuffer veya StringBuilder siniflarini kullanmak verimlilik saglayacaktir. StringBuffer ve StringBuilder objeleri immutable degildir dolayisiyla bu objeler uzerinde degisiklik yapilabilir.
 ## StringBuffer vs StringBuilder
 * StringBuffer ve StringBuilder ayni metotlara sahiptir . Bu siniflar arasindaki fark sudur ; StringBuilder <strong>thread-safe</strong> degildir yani StringBuilder sinifinin metotlari <strong>syncronized</strong>  degildir. Dolayisiyla StringBuilder , StringBuffer sinifa gore daha hizli calisacaktir.
-![alt](https://miro.medium.com/max/700/1*r4DzMLpnlYxVZDpXHa_pAA.png)
 ## StringBuilder Nedir?
 - StringBuilder sınıfı en kısa tanımla bize <strong>“mutable”</strong> yani değiştirilebilir string elde etmemize olanak tanır. Böylece hafızada her seferinde yeni bir alan açılmadan var olan alan üzerinde değişiklik yapılabilir. Bu da StringBuilder sınıfını hafıza kullanımı olarak String sınıfının önüne geçirir.
 - StringBuilder thread-safe değildir. Yani <strong>synchronized</strong> değildir. Thread’li bir işlem kullanılacaksa StringBuilder kullanılması güvenli değildir. Basit bir şekilde durumu açıklayacak olursak: Aynı anda birden fazla thread, oluşturduğunuz StringBuilder nesnesini değiştirmeye çalıştığında StringBuilder bunu engelleyemez. Bu durumda da threadler arasında yapılan değişiklikler aslında bizim istemediğimiz değer değişikliğine neden olur.
